@@ -130,18 +130,18 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
                       {q.lines?.map((line: any) => (
                         <tr key={line.id}>
                           <td className="px-3 py-2 text-sm text-gray-800">{line.description}</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.quantity || line.quantity}</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.qty ?? line.quantity ?? 0}</td>
                           <td className="px-3 py-2 text-sm text-right text-gray-600">{formatCurrency(line.unitPrice)}</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.discount || line.discount || 0}%</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.taxRate || line.taxRate || 0}%</td>
-                          <td className="px-3 py-2 text-sm text-right font-medium text-gray-800">{formatCurrency(line.totalAmount)}</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.discountPct ?? line.discount ?? 0}%</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.taxPct ?? line.taxRate ?? 0}%</td>
+                          <td className="px-3 py-2 text-sm text-right font-medium text-gray-800">{formatCurrency(line.lineTotal ?? line.totalAmount)}</td>
                         </tr>
                       ))}
                     </tbody>
                     <tfoot>
                       <tr className="border-t border-gray-200 bg-gray-50">
                         <td colSpan={5} className="px-3 py-2 text-right text-xs text-gray-600">Subtotal</td>
-                        <td className="px-3 py-2 text-right text-xs font-medium text-gray-800">{formatCurrency(q.subtotalAmount)}</td>
+                        <td className="px-3 py-2 text-right text-xs font-medium text-gray-800">{formatCurrency(q.subtotal ?? q.subtotalAmount)}</td>
                       </tr>
                       <tr className="bg-gray-50">
                         <td colSpan={5} className="px-3 py-2 text-right text-xs text-gray-600">GST</td>
