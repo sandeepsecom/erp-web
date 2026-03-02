@@ -42,11 +42,11 @@ export default function EditQuotationModal({ quotation, onClose }: Props) {
       setItems(quotation.lines.map((l: any) => ({
         id: l.id,
         productId: l.productId || '',
-        description: l.description,
-        quantity: Number(l.quantity),
-        unitPrice: Number(l.unitPrice),
-        discount: Number(l.discount),
-        taxRate: Number(l.taxRate),
+        description: l.description || '',
+        quantity: Number(l.qty || l.quantity || 1),
+        unitPrice: Number(l.unitPrice || 0),
+        discount: Number(l.discountPct || l.discount || 0),
+        taxRate: Number(l.taxPct || l.taxRate || 18),
       })));
     } else {
       setItems([{ description: '', quantity: 1, unitPrice: 0, discount: 0, taxRate: 18 }]);
@@ -78,10 +78,10 @@ export default function EditQuotationModal({ quotation, onClose }: Props) {
             id: i.id,
             productId: i.productId || undefined,
             description: i.description,
-            quantity: i.quantity,
+            qty: i.quantity,
             unitPrice: i.unitPrice,
-            discount: i.discount,
-            taxRate: i.taxRate,
+            discountPct: i.discount,
+            taxPct: i.taxRate,
           })),
       }),
     onSuccess: () => {
