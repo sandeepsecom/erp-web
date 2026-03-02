@@ -20,6 +20,7 @@ interface User {
 
 interface AuthState {
   user: User | null;
+  accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
   setAuth: (user: User, accessToken: string, refreshToken: string) => void;
@@ -30,26 +31,27 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
+      accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
 
       setAuth: (user, accessToken, refreshToken) => {
         setAccessToken(accessToken);
-        set({ user, refreshToken, isAuthenticated: true });
+        set({ user, accessToken, refreshToken, isAuthenticated: true });
       },
 
       logout: () => {
         setAccessToken(null);
-        set({ user: null, refreshToken: null, isAuthenticated: false });
+        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false });
       },
     }),
     {
       name: 'erp_auth',
-      partialize: (state) => ({
-        user: state.user,
-        refreshToken: state.refreshToken,
-        isAuthenticated: state.isAuthenticated,
-      }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.accessToken) {
+          setAccessToken(state.accessToken);
+        }
+      },
     }
   )
 );
