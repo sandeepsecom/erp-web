@@ -84,3 +84,13 @@ export const ordersApi = {
 export const productsApi = {
   list: (params?: any) => api.get('/products', { params }),
 };
+
+export const amcApi = {
+  list: (params?: any) => api.get('/amc', { params }),
+  summary: () => api.get('/amc/summary'),
+  get: (id: string) => api.get(`/amc/${id}`),
+  create: (data: any) => api.post('/amc', data),
+  update: (id: string, data: any) => api.put(`/amc/${id}`, data),
+  renew: (id: string, data: any) => api.patch(`/amc/${id}/renew`, data),
+  cancel: (id: string) => api.patch(`/amc/${id}/cancel`),
+};

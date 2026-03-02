@@ -14,6 +14,9 @@ const navItems = [
     { label: 'Quotations', href: '/dashboard/sales/quotations', icon: '📋' },
     { label: 'Orders', href: '/dashboard/sales/orders', icon: '📦' },
   ]},
+  { group: 'Contracts', items: [
+    { label: 'AMC Contracts', href: '/dashboard/amc', icon: '🔒' },
+  ]},
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
