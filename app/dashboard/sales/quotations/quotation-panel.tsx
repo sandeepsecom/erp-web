@@ -130,10 +130,10 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
                       {q.lines?.map((line: any) => (
                         <tr key={line.id}>
                           <td className="px-3 py-2 text-sm text-gray-800">{line.description}</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.quantity}</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.quantity || line.quantity}</td>
                           <td className="px-3 py-2 text-sm text-right text-gray-600">{formatCurrency(line.unitPrice)}</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.discount}%</td>
-                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.taxRate}%</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.discount || line.discount || 0}%</td>
+                          <td className="px-3 py-2 text-sm text-right text-gray-600">{line.taxRate || line.taxRate || 0}%</td>
                           <td className="px-3 py-2 text-sm text-right font-medium text-gray-800">{formatCurrency(line.totalAmount)}</td>
                         </tr>
                       ))}
