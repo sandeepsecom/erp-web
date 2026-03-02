@@ -86,7 +86,7 @@ export default function EditQuotationModal({ quotation, onClose }: Props) {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['quotations'] });
-      queryClient.invalidateQueries({ queryKey: ['quotation', quotation.id] });
+      queryClient.removeQueries({ queryKey: ['quotation', quotation.id] });
       onClose();
     },
     onError: (err: any) => setError(err.message),

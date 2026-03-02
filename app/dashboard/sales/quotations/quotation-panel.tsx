@@ -35,6 +35,7 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
   const { data, isLoading } = useQuery({
     queryKey: ['quotation', quotationId],
     queryFn: () => quotationsApi.get(quotationId),
+    refetchOnWindowFocus: true,
   });
 
   const sendMutation = useMutation({
