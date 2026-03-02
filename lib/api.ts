@@ -13,6 +13,17 @@ export const setAccessToken = (token: string | null) => {
   accessToken = token;
 };
 
+// Restore token from localStorage immediately
+if (typeof window !== 'undefined') {
+  try {
+    const stored = localStorage.getItem('erp_auth');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      accessToken = parsed?.state?.accessToken || null;
+    }
+  } catch (e) {}
+}
+
 api.interceptors.request.use((config) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
