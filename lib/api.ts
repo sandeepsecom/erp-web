@@ -80,3 +80,7 @@ export const ordersApi = {
   done: (id: string) => api.patch(`/sales/orders/${id}/done`),
   cancel: (id: string) => api.patch(`/sales/orders/${id}/cancel`),
 };
+
+export const productsApi = {
+  list: (params?: any) => api.get('/products', { params }),
+};
