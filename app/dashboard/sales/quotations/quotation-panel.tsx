@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { quotationsApi } from '@/lib/api';
 import EditQuotationModal from './edit-quotation-modal';
+import NewAmcModal from '../../amc/new-amc-modal';
 
 interface Props {
   quotationId: string;
@@ -16,6 +17,20 @@ const STATE_COLORS: Record<string, string> = {
   CONFIRMED: 'bg-green-100 text-green-700',
   CANCELLED: 'bg-red-100 text-red-700',
   EXPIRED: 'bg-orange-100 text-orange-700',
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  SALES: 'Sales',
+  INSTALLATION: 'Installation',
+  SALES_INSTALLATION: 'Sales & Installation',
+  AMC: 'AMC',
+};
+
+const TYPE_COLORS: Record<string, string> = {
+  SALES: 'bg-blue-50 text-blue-700',
+  INSTALLATION: 'bg-purple-50 text-purple-700',
+  SALES_INSTALLATION: 'bg-indigo-50 text-indigo-700',
+  AMC: 'bg-green-50 text-green-700',
 };
 
 function formatCurrency(value: any) {
@@ -31,6 +46,7 @@ function formatDate(date: string) {
 export default function QuotationPanel({ quotationId, onClose }: Props) {
   const queryClient = useQueryClient();
   const [showEdit, setShowEdit] = useState(false);
+  const [showConvertAmc, setShowConvertAmc] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['quotation', quotationId],
@@ -63,11 +79,23 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
   });
 
   const q = (data as any)?.data;
+  const isAmcQuotation = q?.quotationType === 'AMC';
+  const isConfirmed = q?.state === 'CONFIRMED';
 
   return (
     <>
       {showEdit && q && (
         <EditQuotationModal quotation={q} onClose={() => setShowEdit(false)} />
+      )}
+      {showConvertAmc && q && (
+        <NewAmcModal
+          quotationId={q.id}
+          contactId={q.contact?.id}
+          onClose={() => {
+            setShowConvertAmc(false);
+            queryClient.invalidateQueries({ queryKey: ['amc'] });
+          }}
+        />
       )}
 
       <div className="fixed inset-0 z-40 flex">
@@ -81,6 +109,11 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
                   {q.state}
                 </span>
               )}
+              {q?.quotationType && (
+                <span className={`text-xs px-2 py-1 rounded-full font-medium ${TYPE_COLORS[q.quotationType] || 'bg-gray-100 text-gray-700'}`}>
+                  {TYPE_LABELS[q.quotationType] || q.quotationType}
+                </span>
+              )}
             </div>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
           </div>
@@ -89,6 +122,19 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
             <div className="flex-1 flex items-center justify-center text-gray-500">Loading...</div>
           ) : q ? (
             <div className="flex-1 overflow-y-auto">
+
+              {isAmcQuotation && isConfirmed && (
+                <div className="mx-6 mt-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center justify-between">
+                  <p className="text-sm text-green-800 font-medium">✅ AMC Quotation confirmed — ready to create contract</p>
+                  <button
+                    onClick={() => setShowConvertAmc(true)}
+                    className="px-3 py-1.5 bg-green-700 text-white rounded-lg text-xs font-medium hover:bg-green-600 transition-colors"
+                  >
+                    Convert to AMC Contract
+                  </button>
+                </div>
+              )}
+
               <div className="px-6 py-4 border-b bg-gray-50">
                 <div className="grid grid-cols-2 gap-4">
                   <div>

@@ -31,6 +31,7 @@ export default function NewQuotationModal({ onClose }: Props) {
     contactId: '',
     validUntil: '',
     notes: '',
+    quotationType: 'SALES',
   });
   const [items, setItems] = useState<LineItem[]>([
     { description: '', quantity: 1, unitPrice: 0, discount: 0, taxRate: 18 },
@@ -56,15 +57,16 @@ export default function NewQuotationModal({ onClose }: Props) {
         contactId: form.contactId,
         validUntil: form.validUntil || undefined,
         notes: form.notes,
+        quotationType: form.quotationType,
         lines: items
           .filter((i) => i.description)
           .map((i) => ({
             productId: i.productId || undefined,
             description: i.description,
-            quantity: i.quantity,
+            qty: i.quantity,
             unitPrice: i.unitPrice,
-            discount: i.discount,
-            taxRate: i.taxRate,
+            discountPct: i.discount,
+            taxPct: i.taxRate,
           })),
       }),
     onSuccess: () => {
@@ -103,10 +105,7 @@ export default function NewQuotationModal({ onClose }: Props) {
     return subtotal - (subtotal * item.discount) / 100;
   };
 
-  const getLineTax = (item: LineItem) => {
-    return (getLineSubtotal(item) * item.taxRate) / 100;
-  };
-
+  const getLineTax = (item: LineItem) => (getLineSubtotal(item) * item.taxRate) / 100;
   const getLineTotal = (item: LineItem) => getLineSubtotal(item) + getLineTax(item);
 
   const subtotal = items.reduce((sum, item) => sum + getLineSubtotal(item), 0);
@@ -126,7 +125,7 @@ export default function NewQuotationModal({ onClose }: Props) {
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs text-gray-600 mb-1">Customer *</label>
               <select
@@ -140,6 +139,19 @@ export default function NewQuotationModal({ onClose }: Props) {
                     {c.companyName || `${c.firstName} ${c.lastName || ''}`}
                   </option>
                 ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-600 mb-1">Quotation Type</label>
+              <select
+                value={form.quotationType}
+                onChange={(e) => setField('quotationType', e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="SALES">Sales</option>
+                <option value="INSTALLATION">Installation</option>
+                <option value="SALES_INSTALLATION">Sales & Installation</option>
+                <option value="AMC">AMC</option>
               </select>
             </div>
             <div>

@@ -7,22 +7,25 @@ import { useAuthStore } from '@/lib/store/auth.store';
 
 interface Props {
   onClose: () => void;
+  quotationId?: string;
+  contactId?: string;
 }
 
-export default function NewAmcModal({ onClose }: Props) {
+export default function NewAmcModal({ onClose, quotationId, contactId }: Props) {
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
   const [form, setForm] = useState({
-    contractNumber: '',
-    contactId: '',
+    contactId: contactId || '',
     startDate: '',
     endDate: '',
     monthlyValue: '',
     annualValue: '',
     sites: '',
     servicesCctv: false,
-    servicesSecurity: false,
     servicesFire: false,
+    servicesAlarm: false,
+    servicesSprinkler: false,
+    servicesPa: false,
     renewalReminderDays: '30',
     notes: '',
   });
@@ -40,6 +43,7 @@ export default function NewAmcModal({ onClose }: Props) {
       amcApi.create({
         ...form,
         companyId: user?.activeCompany?.id,
+        quotationId: quotationId || undefined,
         monthlyValue: parseFloat(form.monthlyValue) || 0,
         annualValue: parseFloat(form.annualValue) || 0,
         renewalReminderDays: parseInt(form.renewalReminderDays) || 30,
@@ -55,7 +59,6 @@ export default function NewAmcModal({ onClose }: Props) {
   const set = (field: string, value: any) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  // Auto calculate annual from monthly
   const handleMonthlyChange = (val: string) => {
     set('monthlyValue', val);
     const monthly = parseFloat(val) || 0;
@@ -75,31 +78,25 @@ export default function NewAmcModal({ onClose }: Props) {
             <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 text-sm">{error}</div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">Contract Number *</label>
-              <input
-                value={form.contractNumber}
-                onChange={(e) => set('contractNumber', e.target.value)}
-                placeholder="e.g. AMC/2025-26/001"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-600 mb-1">Customer *</label>
-              <select
-                value={form.contactId}
-                onChange={(e) => set('contactId', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select customer...</option>
-                {contacts.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.companyName || `${c.firstName} ${c.lastName || ''}`}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-xs text-blue-700">Contract number will be auto-generated (e.g. AMC/2025-26/001)</p>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">Customer *</label>
+            <select
+              value={form.contactId}
+              onChange={(e) => set('contactId', e.target.value)}
+              disabled={!!contactId}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
+            >
+              <option value="">Select customer...</option>
+              {contacts.map((c: any) => (
+                <option key={c.id} value={c.id}>
+                  {c.companyName || `${c.firstName} ${c.lastName || ''}`}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -167,34 +164,24 @@ export default function NewAmcModal({ onClose }: Props) {
 
           <div>
             <label className="block text-xs text-gray-600 mb-2">Services Included</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={form.servicesCctv}
-                  onChange={(e) => set('servicesCctv', e.target.checked)}
-                  className="w-4 h-4 text-blue-900"
-                />
-                <span className="text-sm text-gray-700">CCTV</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={form.servicesSecurity}
-                  onChange={(e) => set('servicesSecurity', e.target.checked)}
-                  className="w-4 h-4 text-blue-900"
-                />
-                <span className="text-sm text-gray-700">Security</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={form.servicesFire}
-                  onChange={(e) => set('servicesFire', e.target.checked)}
-                  className="w-4 h-4 text-blue-900"
-                />
-                <span className="text-sm text-gray-700">Fire</span>
-              </label>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { key: 'servicesCctv', label: 'CCTV' },
+                { key: 'servicesFire', label: 'Fire' },
+                { key: 'servicesAlarm', label: 'Intrusion Alarm' },
+                { key: 'servicesSprinkler', label: 'Sprinklers' },
+                { key: 'servicesPa', label: 'PA System' },
+              ].map((s) => (
+                <label key={s.key} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={(form as any)[s.key]}
+                    onChange={(e) => set(s.key, e.target.checked)}
+                    className="w-4 h-4 text-blue-900"
+                  />
+                  <span className="text-sm text-gray-700">{s.label}</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -215,7 +202,7 @@ export default function NewAmcModal({ onClose }: Props) {
           </button>
           <button
             onClick={() => mutation.mutate()}
-            disabled={!form.contractNumber || !form.contactId || !form.startDate || !form.endDate || mutation.isPending}
+            disabled={!form.contactId || !form.startDate || !form.endDate || mutation.isPending}
             className="px-6 py-2 bg-blue-900 text-white rounded-lg text-sm font-medium hover:bg-blue-800 disabled:opacity-50 transition-colors"
           >
             {mutation.isPending ? 'Creating...' : 'Create Contract'}

@@ -38,6 +38,14 @@ function daysUntil(date: string) {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
+const SERVICES = [
+  { key: 'servicesCctv', label: 'CCTV', color: 'bg-purple-100 text-purple-700' },
+  { key: 'servicesFire', label: 'Fire', color: 'bg-red-100 text-red-700' },
+  { key: 'servicesAlarm', label: 'Intrusion Alarm', color: 'bg-orange-100 text-orange-700' },
+  { key: 'servicesSprinkler', label: 'Sprinklers', color: 'bg-blue-100 text-blue-700' },
+  { key: 'servicesPa', label: 'PA System', color: 'bg-green-100 text-green-700' },
+];
+
 export default function AmcPanel({ contractId, onClose }: Props) {
   const queryClient = useQueryClient();
   const [showRenew, setShowRenew] = useState(false);
@@ -65,8 +73,8 @@ export default function AmcPanel({ contractId, onClose }: Props) {
     mutationFn: () =>
       amcApi.renew(contractId, {
         newEndDate: renewForm.newEndDate,
-        monthlyValue: parseFloat(renewForm.monthlyValue) || c?.monthlyValue,
-        annualValue: parseFloat(renewForm.annualValue) || c?.annualValue,
+        monthlyValue: parseFloat(renewForm.monthlyValue) || Number(c?.monthlyValue),
+        annualValue: parseFloat(renewForm.annualValue) || Number(c?.annualValue),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['amc'] });
@@ -78,6 +86,7 @@ export default function AmcPanel({ contractId, onClose }: Props) {
 
   const c = (data as any)?.data;
   const days = c ? daysUntil(c.endDate) : 0;
+  const activeServices = SERVICES.filter((s) => c?.[s.key]);
 
   return (
     <div className="fixed inset-0 z-40 flex">
@@ -99,7 +108,6 @@ export default function AmcPanel({ contractId, onClose }: Props) {
           <div className="flex-1 flex items-center justify-center text-gray-500">Loading...</div>
         ) : c ? (
           <div className="flex-1 overflow-y-auto">
-
             {c.status === 'PENDING_RENEWAL' && (
               <div className="mx-6 mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p className="text-sm text-yellow-800 font-medium">
@@ -145,11 +153,14 @@ export default function AmcPanel({ contractId, onClose }: Props) {
 
             <div className="px-6 py-4 border-b">
               <p className="text-xs text-gray-500 mb-2">Services Included</p>
-              <div className="flex gap-2">
-                {c.servicesCctv && <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">CCTV</span>}
-                {c.servicesSecurity && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Security</span>}
-                {c.servicesFire && <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Fire</span>}
-                {!c.servicesCctv && !c.servicesSecurity && !c.servicesFire && (
+              <div className="flex flex-wrap gap-2">
+                {activeServices.length > 0 ? (
+                  activeServices.map((s) => (
+                    <span key={s.key} className={`text-xs px-2 py-1 rounded-full font-medium ${s.color}`}>
+                      {s.label}
+                    </span>
+                  ))
+                ) : (
                   <span className="text-sm text-gray-400">No services selected</span>
                 )}
               </div>
@@ -181,7 +192,7 @@ export default function AmcPanel({ contractId, onClose }: Props) {
                       type="number"
                       value={renewForm.monthlyValue}
                       onChange={(e) => setRenewForm((p) => ({ ...p, monthlyValue: e.target.value }))}
-                      placeholder={c.monthlyValue}
+                      placeholder={String(c.monthlyValue)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
@@ -191,7 +202,7 @@ export default function AmcPanel({ contractId, onClose }: Props) {
                       type="number"
                       value={renewForm.annualValue}
                       onChange={(e) => setRenewForm((p) => ({ ...p, annualValue: e.target.value }))}
-                      placeholder={c.annualValue}
+                      placeholder={String(c.annualValue)}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>

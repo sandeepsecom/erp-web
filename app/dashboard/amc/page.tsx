@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { amcApi } from '@/lib/api';
 import { useState } from 'react';
 import NewAmcModal from './new-amc-modal';
@@ -19,6 +19,14 @@ const STATUS_LABELS: Record<string, string> = {
   RENEWED: 'Renewed',
   CANCELLED: 'Cancelled',
 };
+
+const SERVICES = [
+  { key: 'servicesCctv', label: 'CCTV', color: 'bg-purple-100 text-purple-700' },
+  { key: 'servicesFire', label: 'Fire', color: 'bg-red-100 text-red-700' },
+  { key: 'servicesAlarm', label: 'Alarm', color: 'bg-orange-100 text-orange-700' },
+  { key: 'servicesSprinkler', label: 'Sprinkler', color: 'bg-blue-100 text-blue-700' },
+  { key: 'servicesPa', label: 'PA', color: 'bg-green-100 text-green-700' },
+];
 
 function formatCurrency(value: any) {
   const num = Number(value) || 0;
@@ -142,6 +150,7 @@ export default function AmcPage() {
               <tbody className="divide-y divide-gray-100">
                 {contracts.map((c: any) => {
                   const days = daysUntil(c.endDate);
+                  const activeServices = SERVICES.filter((s) => c[s.key]);
                   return (
                     <tr
                       key={c.id}
@@ -158,10 +167,12 @@ export default function AmcPage() {
                         {c.sites && <p className="text-xs text-gray-400 mt-0.5">{c.sites}</p>}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex gap-1">
-                          {c.servicesCctv && <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">CCTV</span>}
-                          {c.servicesSecurity && <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">Security</span>}
-                          {c.servicesFire && <span className="text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded">Fire</span>}
+                        <div className="flex flex-wrap gap-1">
+                          {activeServices.map((s) => (
+                            <span key={s.key} className={`text-xs px-1.5 py-0.5 rounded font-medium ${s.color}`}>
+                              {s.label}
+                            </span>
+                          ))}
                         </div>
                       </td>
                       <td className="px-4 py-3">
