@@ -10,11 +10,20 @@ interface LineItem {
   quantity: number;
   unitPrice: number;
   discount: number;
+  taxRate: number;
 }
 
 interface Props {
   onClose: () => void;
 }
+
+const TAX_RATES = [
+  { label: 'No Tax (0%)', value: 0 },
+  { label: 'GST 5%', value: 5 },
+  { label: 'GST 12%', value: 12 },
+  { label: 'GST 18%', value: 18 },
+  { label: 'GST 28%', value: 28 },
+];
 
 export default function NewQuotationModal({ onClose }: Props) {
   const queryClient = useQueryClient();
@@ -24,7 +33,7 @@ export default function NewQuotationModal({ onClose }: Props) {
     notes: '',
   });
   const [items, setItems] = useState<LineItem[]>([
-    { description: '', quantity: 1, unitPrice: 0, discount: 0 },
+    { description: '', quantity: 1, unitPrice: 0, discount: 0, taxRate: 18 },
   ]);
   const [error, setError] = useState('');
 
@@ -55,6 +64,7 @@ export default function NewQuotationModal({ onClose }: Props) {
             quantity: i.quantity,
             unitPrice: i.unitPrice,
             discount: i.discount,
+            taxRate: i.taxRate,
           })),
       }),
     onSuccess: () => {
@@ -83,21 +93,29 @@ export default function NewQuotationModal({ onClose }: Props) {
   };
 
   const addItem = () =>
-    setItems((prev) => [...prev, { description: '', quantity: 1, unitPrice: 0, discount: 0 }]);
+    setItems((prev) => [...prev, { description: '', quantity: 1, unitPrice: 0, discount: 0, taxRate: 18 }]);
 
   const removeItem = (index: number) =>
     setItems((prev) => prev.filter((_, i) => i !== index));
 
-  const getLineTotal = (item: LineItem) => {
+  const getLineSubtotal = (item: LineItem) => {
     const subtotal = item.quantity * item.unitPrice;
     return subtotal - (subtotal * item.discount) / 100;
   };
 
-  const grandTotal = items.reduce((sum, item) => sum + getLineTotal(item), 0);
+  const getLineTax = (item: LineItem) => {
+    return (getLineSubtotal(item) * item.taxRate) / 100;
+  };
+
+  const getLineTotal = (item: LineItem) => getLineSubtotal(item) + getLineTax(item);
+
+  const subtotal = items.reduce((sum, item) => sum + getLineSubtotal(item), 0);
+  const totalTax = items.reduce((sum, item) => sum + getLineTax(item), 0);
+  const grandTotal = subtotal + totalTax;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="text-lg font-semibold text-gray-900">New Quotation</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
@@ -138,10 +156,7 @@ export default function NewQuotationModal({ onClose }: Props) {
           <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-medium text-gray-700">Line Items</h3>
-              <button
-                onClick={addItem}
-                className="text-xs text-blue-700 hover:text-blue-900 font-medium"
-              >
+              <button onClick={addItem} className="text-xs text-blue-700 hover:text-blue-900 font-medium">
                 + Add Item
               </button>
             </div>
@@ -154,7 +169,8 @@ export default function NewQuotationModal({ onClose }: Props) {
                     <th className="text-left px-3 py-2 text-xs text-gray-500">Description</th>
                     <th className="text-right px-3 py-2 text-xs text-gray-500">Qty</th>
                     <th className="text-right px-3 py-2 text-xs text-gray-500">Unit Price</th>
-                    <th className="text-right px-3 py-2 text-xs text-gray-500">Disc %</th>
+                    <th className="text-right px-3 py-2 text-xs text-gray-500">Disc%</th>
+                    <th className="text-right px-3 py-2 text-xs text-gray-500">Tax</th>
                     <th className="text-right px-3 py-2 text-xs text-gray-500">Total</th>
                     <th className="px-3 py-2"></th>
                   </tr>
@@ -166,7 +182,7 @@ export default function NewQuotationModal({ onClose }: Props) {
                         <select
                           value={item.productId || ''}
                           onChange={(e) => setItem(index, 'productId', e.target.value)}
-                          className="w-32 border border-gray-200 rounded px-2 py-1 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-28 border border-gray-200 rounded px-2 py-1 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         >
                           <option value="">Custom</option>
                           {products.map((p: any) => (
@@ -188,7 +204,7 @@ export default function NewQuotationModal({ onClose }: Props) {
                           min="1"
                           value={item.quantity}
                           onChange={(e) => setItem(index, 'quantity', Number(e.target.value))}
-                          className="w-16 border border-gray-200 rounded px-2 py-1 text-xs text-right text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-14 border border-gray-200 rounded px-2 py-1 text-xs text-right text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                       </td>
                       <td className="px-3 py-2">
@@ -207,33 +223,45 @@ export default function NewQuotationModal({ onClose }: Props) {
                           max="100"
                           value={item.discount}
                           onChange={(e) => setItem(index, 'discount', Number(e.target.value))}
-                          className="w-16 border border-gray-200 rounded px-2 py-1 text-xs text-right text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-14 border border-gray-200 rounded px-2 py-1 text-xs text-right text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
+                      </td>
+                      <td className="px-3 py-2">
+                        <select
+                          value={item.taxRate}
+                          onChange={(e) => setItem(index, 'taxRate', Number(e.target.value))}
+                          className="w-24 border border-gray-200 rounded px-2 py-1 text-xs text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        >
+                          {TAX_RATES.map((t) => (
+                            <option key={t.value} value={t.value}>{t.label}</option>
+                          ))}
+                        </select>
                       </td>
                       <td className="px-3 py-2 text-right text-xs font-medium text-gray-800">
                         ₹{getLineTotal(item).toLocaleString('en-IN')}
                       </td>
                       <td className="px-3 py-2">
                         {items.length > 1 && (
-                          <button
-                            onClick={() => removeItem(index)}
-                            className="text-red-400 hover:text-red-600 text-lg leading-none"
-                          >
-                            &times;
-                          </button>
+                          <button onClick={() => removeItem(index)} className="text-red-400 hover:text-red-600 text-lg leading-none">&times;</button>
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
+                  <tr className="border-t border-gray-200 bg-gray-50">
+                    <td colSpan={6} className="px-3 py-2 text-right text-xs text-gray-600">Subtotal</td>
+                    <td className="px-3 py-2 text-right text-xs font-medium text-gray-800">₹{subtotal.toLocaleString('en-IN')}</td>
+                    <td></td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td colSpan={6} className="px-3 py-2 text-right text-xs text-gray-600">GST</td>
+                    <td className="px-3 py-2 text-right text-xs font-medium text-gray-800">₹{totalTax.toLocaleString('en-IN')}</td>
+                    <td></td>
+                  </tr>
                   <tr className="bg-gray-50 border-t border-gray-200">
-                    <td colSpan={5} className="px-3 py-2 text-right text-sm font-medium text-gray-700">
-                      Grand Total
-                    </td>
-                    <td className="px-3 py-2 text-right text-sm font-bold text-gray-900">
-                      ₹{grandTotal.toLocaleString('en-IN')}
-                    </td>
+                    <td colSpan={6} className="px-3 py-2 text-right text-sm font-semibold text-gray-800">Grand Total</td>
+                    <td className="px-3 py-2 text-right text-sm font-bold text-gray-900">₹{grandTotal.toLocaleString('en-IN')}</td>
                     <td></td>
                   </tr>
                 </tfoot>
@@ -254,10 +282,7 @@ export default function NewQuotationModal({ onClose }: Props) {
         </div>
 
         <div className="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-2xl">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-          >
+          <button onClick={onClose} className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
             Cancel
           </button>
           <button

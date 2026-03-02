@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { quotationsApi } from '@/lib/api';
 import { useState } from 'react';
 import NewQuotationModal from './new-quotation-modal';
+import QuotationPanel from './quotation-panel';
 
 const STATE_COLORS: Record<string, string> = {
   DRAFT: 'bg-gray-100 text-gray-700',
@@ -29,6 +30,7 @@ export default function QuotationsPage() {
   const [search, setSearch] = useState('');
   const [state, setState] = useState('');
   const [showNewQuotation, setShowNewQuotation] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ['quotations', search, state],
@@ -41,6 +43,7 @@ export default function QuotationsPage() {
   return (
     <div className="h-full flex flex-col">
       {showNewQuotation && <NewQuotationModal onClose={() => setShowNewQuotation(false)} />}
+      {selectedId && <QuotationPanel quotationId={selectedId} onClose={() => setSelectedId(null)} />}
 
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div>
@@ -92,12 +95,15 @@ export default function QuotationsPage() {
                   <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">Amount</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Valid Until</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Salesperson</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {quotations.map((q: any) => (
-                  <tr key={q.id} className="hover:bg-gray-50 transition-colors">
+                  <tr
+                    key={q.id}
+                    onClick={() => setSelectedId(q.id)}
+                    className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3">
                       <span className="text-sm font-medium text-blue-700">{q.name}</span>
                       {q.version > 1 && (
@@ -124,20 +130,6 @@ export default function QuotationsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-sm text-gray-600">{q.salesperson?.fullName || '—'}</span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        {q.state === 'DRAFT' && (
-                          <button className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded hover:bg-blue-100 transition-colors">
-                            Send
-                          </button>
-                        )}
-                        {q.state === 'SENT' && (
-                          <button className="text-xs bg-green-50 text-green-700 px-2 py-1 rounded hover:bg-green-100 transition-colors">
-                            Confirm
-                          </button>
-                        )}
-                      </div>
                     </td>
                   </tr>
                 ))}
