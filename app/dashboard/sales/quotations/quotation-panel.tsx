@@ -166,14 +166,12 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
           ) : null}
 
           <div className="px-6 py-4 border-t bg-gray-50 flex gap-3">
-            {q?.state === 'DRAFT' && (
-              <button
-                onClick={() => setShowEdit(true)}
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
-                ✏️ Edit
-              </button>
-            )}
+            <button
+              onClick={() => setShowEdit(true)}
+              className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              ✏️ Edit
+            </button>
             {q?.state === 'DRAFT' && (
               <button
                 onClick={() => sendMutation.mutate()}
