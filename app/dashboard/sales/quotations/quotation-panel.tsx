@@ -88,15 +88,16 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
         <EditQuotationModal quotation={q} onClose={() => setShowEdit(false)} />
       )}
       {showConvertAmc && q && (
-        <NewAmcModal
-          quotationId={q.id}
-          contactId={q.contact?.id}
-          onClose={() => {
-            setShowConvertAmc(false);
-            queryClient.invalidateQueries({ queryKey: ['amc'] });
-          }}
-        />
-      )}
+  <NewAmcModal
+    quotationId={q.id}
+    contactId={q.contact?.id}
+    totalAmount={Number(q.totalAmount)}
+    onClose={() => {
+      setShowConvertAmc(false);
+      queryClient.invalidateQueries({ queryKey: ['amc'] });
+    }}
+  />
+)}
 
       <div className="fixed inset-0 z-40 flex">
         <div className="flex-1 bg-black/30" onClick={onClose} />

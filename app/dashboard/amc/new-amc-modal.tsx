@@ -9,17 +9,26 @@ interface Props {
   onClose: () => void;
   quotationId?: string;
   contactId?: string;
+  totalAmount?: number;
 }
 
-export default function NewAmcModal({ onClose, quotationId, contactId }: Props) {
+export default function NewAmcModal({ onClose, quotationId, contactId, totalAmount }: Props) {
   const queryClient = useQueryClient();
   const user = useAuthStore((s) => s.user);
+
+  const today = new Date().toISOString().split('T')[0];
+  const oneYearLater = new Date();
+  oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+  const defaultEndDate = oneYearLater.toISOString().split('T')[0];
+
+  const monthlyFromTotal = totalAmount ? Math.round(totalAmount / 12) : 0;
+
   const [form, setForm] = useState({
     contactId: contactId || '',
-    startDate: '',
-    endDate: '',
-    monthlyValue: '',
-    annualValue: '',
+    startDate: today,
+    endDate: defaultEndDate,
+    monthlyValue: monthlyFromTotal ? String(monthlyFromTotal) : '',
+    annualValue: totalAmount ? String(Math.round(totalAmount)) : '',
     sites: '',
     servicesCctv: false,
     servicesFire: false,
@@ -65,11 +74,19 @@ export default function NewAmcModal({ onClose, quotationId, contactId }: Props) 
     set('annualValue', (monthly * 12).toString());
   };
 
+  const handleAnnualChange = (val: string) => {
+    set('annualValue', val);
+    const annual = parseFloat(val) || 0;
+    set('monthlyValue', Math.round(annual / 12).toString());
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-lg font-semibold text-gray-900">New AMC Contract</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            {quotationId ? 'Convert to AMC Contract' : 'New AMC Contract'}
+          </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
         </div>
 
@@ -136,7 +153,7 @@ export default function NewAmcModal({ onClose, quotationId, contactId }: Props) 
               <input
                 type="number"
                 value={form.annualValue}
-                onChange={(e) => set('annualValue', e.target.value)}
+                onChange={(e) => handleAnnualChange(e.target.value)}
                 placeholder="0"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -205,7 +222,7 @@ export default function NewAmcModal({ onClose, quotationId, contactId }: Props) 
             disabled={!form.contactId || !form.startDate || !form.endDate || mutation.isPending}
             className="px-6 py-2 bg-blue-900 text-white rounded-lg text-sm font-medium hover:bg-blue-800 disabled:opacity-50 transition-colors"
           >
-            {mutation.isPending ? 'Creating...' : 'Create Contract'}
+            {mutation.isPending ? 'Creating...' : quotationId ? 'Create AMC Contract' : 'Create Contract'}
           </button>
         </div>
       </div>
