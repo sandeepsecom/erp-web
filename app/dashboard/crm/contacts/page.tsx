@@ -123,3 +123,7 @@ export default function ContactsPage() {
     </div>
   );
 }
+
+export const productsApi = {
+  list: (params?: any) => api.get('/products', { params }),
+};

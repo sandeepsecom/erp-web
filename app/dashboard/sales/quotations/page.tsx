@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { quotationsApi } from '@/lib/api';
 import { useState } from 'react';
+import NewQuotationModal from './new-quotation-modal';
 
 const STATE_COLORS: Record<string, string> = {
   DRAFT: 'bg-gray-100 text-gray-700',
@@ -27,6 +28,7 @@ function formatDate(date: string) {
 export default function QuotationsPage() {
   const [search, setSearch] = useState('');
   const [state, setState] = useState('');
+  const [showNewQuotation, setShowNewQuotation] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['quotations', search, state],
@@ -38,12 +40,17 @@ export default function QuotationsPage() {
 
   return (
     <div className="h-full flex flex-col">
+      {showNewQuotation && <NewQuotationModal onClose={() => setShowNewQuotation(false)} />}
+
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Quotations</h1>
           {meta && <p className="text-sm text-gray-500 mt-0.5">{meta.total} total</p>}
         </div>
-        <button className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors">
+        <button
+          onClick={() => setShowNewQuotation(true)}
+          className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors"
+        >
           + New Quotation
         </button>
       </div>
@@ -54,12 +61,12 @@ export default function QuotationsPage() {
           placeholder="Search quotations..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
         />
         <select
           value={state}
           onChange={(e) => setState(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All States</option>
           <option value="DRAFT">Draft</option>
