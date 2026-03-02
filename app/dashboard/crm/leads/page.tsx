@@ -2,6 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { leadsApi } from '@/lib/api';
+import { useState } from 'react';
+import NewLeadModal from './new-lead-modal';
 
 const STAGE_COLORS: Record<string, string> = {
   NEW: 'bg-gray-100 border-gray-300',
@@ -31,6 +33,8 @@ function formatCurrency(value: any) {
 }
 
 export default function LeadsPage() {
+  const [showNewLead, setShowNewLead] = useState(false);
+
   const { data, isLoading } = useQuery({
     queryKey: ['leads-kanban'],
     queryFn: () => leadsApi.kanban(),
@@ -54,6 +58,8 @@ export default function LeadsPage() {
 
   return (
     <div className="h-full flex flex-col">
+      {showNewLead && <NewLeadModal onClose={() => setShowNewLead(false)} />}
+
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Sales Pipeline</h1>
@@ -63,7 +69,10 @@ export default function LeadsPage() {
             </p>
           )}
         </div>
-        <button className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors">
+        <button
+          onClick={() => setShowNewLead(true)}
+          className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors"
+        >
           + New Lead
         </button>
       </div>

@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { contactsApi } from '@/lib/api';
 import { useState } from 'react';
+import NewContactModal from './new-contact-modal';
 
 const TYPE_COLORS: Record<string, string> = {
   LEAD: 'bg-blue-100 text-blue-700',
@@ -14,6 +15,7 @@ const TYPE_COLORS: Record<string, string> = {
 export default function ContactsPage() {
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
+  const [showNewContact, setShowNewContact] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ['contacts', search, type],
@@ -25,12 +27,17 @@ export default function ContactsPage() {
 
   return (
     <div className="h-full flex flex-col">
+      {showNewContact && <NewContactModal onClose={() => setShowNewContact(false)} />}
+
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-gray-900">Contacts</h1>
           {meta && <p className="text-sm text-gray-500 mt-0.5">{meta.total} total</p>}
         </div>
-        <button className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors">
+        <button
+          onClick={() => setShowNewContact(true)}
+          className="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors"
+        >
           + New Contact
         </button>
       </div>
@@ -41,12 +48,12 @@ export default function ContactsPage() {
           placeholder="Search contacts..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
         />
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">All Types</option>
           <option value="LEAD">Lead</option>
