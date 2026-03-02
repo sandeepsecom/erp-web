@@ -19,15 +19,16 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, _hasHydrated } = useAuthStore();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, router]);
+  if (_hasHydrated && !isAuthenticated) {
+    router.push('/login');
+  }
+}, [_hasHydrated, isAuthenticated, router]);
 
-  if (!isAuthenticated) return null;
+if (!_hasHydrated) return null;
+if (!isAuthenticated) return null;
 
   return (
     <div className="flex h-screen bg-gray-100">
