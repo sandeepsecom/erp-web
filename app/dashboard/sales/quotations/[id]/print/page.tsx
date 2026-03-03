@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { quotationsApi, api } from '@/lib/api';
+import { quotationsApi, api, setAccessToken } from '@/lib/api';
 
 function formatCurrency(value: any) {
   const num = Number(value) || 0;
@@ -27,18 +27,29 @@ export default function PrintQuotationPage() {
   const [quotation, setQuotation] = useState<any>(null);
   const [company, setCompany] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function load() {
       try {
+        // Ensure token is set from localStorage for new tab
+        if (typeof window !== 'undefined') {
+          const stored = localStorage.getItem('erp_auth');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            const token = parsed?.state?.accessToken;
+            if (token) setAccessToken(token);
+          }
+        }
+
         const [qRes, cRes] = await Promise.all([
           quotationsApi.get(id),
           api.get('/core/company'),
         ]);
         setQuotation((qRes as any)?.data);
         setCompany((cRes as any)?.data);
-      } catch (err) {
-        console.error(err);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load quotation');
       } finally {
         setLoading(false);
       }
@@ -52,9 +63,9 @@ export default function PrintQuotationPage() {
     </div>
   );
 
-  if (!quotation) return (
+  if (error || !quotation) return (
     <div className="flex items-center justify-center h-screen">
-      <p className="text-gray-500">Quotation not found.</p>
+      <p className="text-red-500">{error || 'Quotation not found.'}</p>
     </div>
   );
 
@@ -78,7 +89,7 @@ export default function PrintQuotationPage() {
         >
           ✕ Close
         </button>
-        <span className="text-sm text-gray-500">Tip: To save as PDF, select "Save as PDF" in the print dialog</span>
+        <span className="text-sm text-gray-500">Tip: Select "Save as PDF" in the print dialog to download</span>
       </div>
 
       {/* A4 Page */}
@@ -101,7 +112,9 @@ export default function PrintQuotationPage() {
               )}
               {company?.phone && <p className="text-sm text-gray-600">📞 {company.phone}</p>}
               {company?.email && <p className="text-sm text-gray-600">✉️ {company.email}</p>}
-              {company?.gstin && <p className="text-sm text-gray-600 mt-1">GSTIN: <span className="font-medium">{company.gstin}</span></p>}
+              {company?.gstin && (
+                <p className="text-sm text-gray-600 mt-1">GSTIN: <span className="font-medium">{company.gstin}</span></p>
+              )}
             </div>
             <div className="text-right">
               <h2 className="text-xl font-bold text-gray-800 uppercase tracking-wide">{quotationTitle}</h2>
@@ -217,7 +230,9 @@ export default function PrintQuotationPage() {
             <div>
               <div className="border-t-2 border-gray-300 pt-2">
                 <p className="text-xs text-gray-500">Customer Signature & Stamp</p>
-                <p className="text-sm text-gray-700 mt-1">{contact?.companyName || `${contact?.firstName} ${contact?.lastName || ''}`}</p>
+                <p className="text-sm text-gray-700 mt-1">
+                  {contact?.companyName || `${contact?.firstName} ${contact?.lastName || ''}`}
+                </p>
               </div>
             </div>
             <div className="text-right">
