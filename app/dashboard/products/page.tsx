@@ -124,8 +124,8 @@ export default function ProductsPage() {
   const [filterCategory, setFilterCategory] = useState('');
   const [filterType, setFilterType] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [editProduct, setEditProduct] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [editProduct, setEditProduct] = useState<any>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [showSerialModal, setShowSerialModal] = useState(false);
   const [serialInput, setSerialInput] = useState('');
   const [form, setForm] = useState(defaultForm);
