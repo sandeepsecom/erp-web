@@ -239,7 +239,7 @@ export default function SettingsPage() {
                   value={form.gstin}
                   onChange={(e) => handleChange('gstin', e.target.value.toUpperCase())}
                   placeholder="27AABCS1234A1Z5"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 font-mono"
                 />
               </div>
               <div>
@@ -248,7 +248,7 @@ export default function SettingsPage() {
                   value={form.pan}
                   onChange={(e) => handleChange('pan', e.target.value.toUpperCase())}
                   placeholder="AABCS1234A"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 font-mono"
                 />
               </div>
               <div>
@@ -346,7 +346,7 @@ export default function SettingsPage() {
               <input
                 value={form.bankAccountNumber}
                 onChange={(e) => handleChange('bankAccountNumber', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 font-mono"
               />
             </div>
             <div>
@@ -355,7 +355,7 @@ export default function SettingsPage() {
                 value={form.bankIfsc}
                 onChange={(e) => handleChange('bankIfsc', e.target.value.toUpperCase())}
                 placeholder="KKBK0000651"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 font-mono"
               />
             </div>
             <div className="col-span-2">
@@ -385,7 +385,7 @@ export default function SettingsPage() {
                   value={form.sendgridApiKey}
                   onChange={(e) => handleChange('sendgridApiKey', e.target.value)}
                   placeholder="SG.xxxxxxxx"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 font-mono"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
