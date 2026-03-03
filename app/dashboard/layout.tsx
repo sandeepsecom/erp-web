@@ -14,7 +14,7 @@ const navItems = [
   { group: 'Sales', items: [
     { label: 'Quotations', href: '/dashboard/sales/quotations', icon: '📋' },
     { label: 'Orders', href: '/dashboard/sales/orders', icon: '📦' },
-    { label: 'Products', href: '/dashboard/products', icon: '📦' },
+    { label: 'Products', href: '/dashboard/products', icon: '🏷️' },
   ]},
   { group: 'Contracts', items: [
     { label: 'AMC Contracts', href: '/dashboard/amc', icon: '🔒' },
