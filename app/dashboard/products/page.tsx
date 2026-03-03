@@ -8,7 +8,7 @@ const DEFAULT_CATEGORIES = ['CCTV', 'Fire', 'Alarm', 'Access Control', 'Networki
 const DEFAULT_UOM = ['NOS', 'MTR', 'SQF', 'KG', 'LTR', 'SET', 'PAIR', 'BOX', 'ROLL'];
 const GST_RATES = [0, 5, 12, 18, 28];
 
-function formatCurrency(value) {
+function formatCurrency(value: any) {
   const num = Number(value) || 0;
   return '₹' + num.toLocaleString('en-IN');
 }
@@ -27,7 +27,7 @@ const defaultForm = {
   hsnCode: '', sacCode: '', isService: false, isStorable: true, trackSerial: false,
 };
 
-function AddOptionBtn({ onClick }) {
+function AddOptionBtn({ onClick }: { onClick: () => void }) {
   return (
     <button type="button" onClick={onClick}
       className="ml-1 w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-200 flex items-center justify-center flex-shrink-0"
@@ -35,7 +35,7 @@ function AddOptionBtn({ onClick }) {
   );
 }
 
-function AddOptionModal({ label, onAdd, onClose }) {
+function AddOptionModal({ label, onAdd, onClose }: { label: string; onAdd: (val: string) => void; onClose: () => void }) {
   const [value, setValue] = useState('');
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30">
@@ -55,7 +55,7 @@ function AddOptionModal({ label, onAdd, onClose }) {
   );
 }
 
-function HsnSacSearch({ isService, onSelect }) {
+function HsnSacSearch({ isService, onSelect }: { isService: boolean; onSelect: (code: string) => void }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
