@@ -84,6 +84,12 @@ export const ordersApi = {
 
 export const productsApi = {
   list: (params?: any) => api.get('/products', { params }),
+  get: (id: string) => api.get(`/products/${id}`),
+  create: (data: any) => api.post('/products', data),
+  update: (id: string, data: any) => api.put(`/products/${id}`, data),
+  delete: (id: string) => api.delete(`/products/${id}`),
+  addSerials: (id: string, data: any) => api.post(`/products/${id}/serials`, data),
+  updateSerial: (id: string, serialId: string, data: any) => api.patch(`/products/${id}/serials/${serialId}`, data),
 };
 
 export const amcApi = {
