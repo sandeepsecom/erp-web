@@ -13,7 +13,6 @@ export const setAccessToken = (token: string | null) => {
   accessToken = token;
 };
 
-// Restore token from localStorage immediately
 if (typeof window !== 'undefined') {
   try {
     const stored = localStorage.getItem('erp_auth');
@@ -44,6 +43,8 @@ export const authApi = {
     api.post('/auth/login', { email, password }),
   me: () => api.get('/auth/me'),
   logout: (refreshToken: string) => api.post('/auth/logout', { refreshToken }),
+  switchCompany: (companySlug: string) =>
+    api.post('/auth/switch-company', { companySlug }),
 };
 
 export const contactsApi = {
@@ -93,8 +94,4 @@ export const amcApi = {
   update: (id: string, data: any) => api.put(`/amc/${id}`, data),
   renew: (id: string, data: any) => api.patch(`/amc/${id}/renew`, data),
   cancel: (id: string) => api.patch(`/amc/${id}/cancel`),
-};
-
-export const authApi = {
-  switchCompany: (companySlug: string) => api.post('/auth/switch-company', { companySlug }),
 };
