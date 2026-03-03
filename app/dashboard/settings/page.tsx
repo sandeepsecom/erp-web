@@ -222,7 +222,7 @@ export default function SettingsPage() {
                 <input
                   value={form.name}
                   onChange={(e) => handleChange('name', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div>
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                 <input
                   value={form.legalName}
                   onChange={(e) => handleChange('legalName', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div>
@@ -256,7 +256,7 @@ export default function SettingsPage() {
                 <input
                   value={form.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div>
@@ -265,7 +265,7 @@ export default function SettingsPage() {
                   type="email"
                   value={form.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
             </div>
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                 <input
                   value={form.addressLine1}
                   onChange={(e) => handleChange('addressLine1', e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
               </div>
               <div className="grid grid-cols-3 gap-4">
@@ -289,7 +289,7 @@ export default function SettingsPage() {
                   <input
                     value={form.city}
                     onChange={(e) => handleChange('city', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
                 <div>
@@ -297,7 +297,7 @@ export default function SettingsPage() {
                   <select
                     value={form.state}
                     onChange={(e) => handleChange('state', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   >
                     <option value="">Select state</option>
                     {STATES.map((s) => (
@@ -310,7 +310,7 @@ export default function SettingsPage() {
                   <input
                     value={form.pincode}
                     onChange={(e) => handleChange('pincode', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
               </div>
@@ -330,7 +330,7 @@ export default function SettingsPage() {
                 value={form.bankName}
                 onChange={(e) => handleChange('bankName', e.target.value)}
                 placeholder="Kotak Mahindra Bank"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               />
             </div>
             <div>
@@ -338,7 +338,7 @@ export default function SettingsPage() {
               <input
                 value={form.bankAccountName}
                 onChange={(e) => handleChange('bankAccountName', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               />
             </div>
             <div>
@@ -364,7 +364,7 @@ export default function SettingsPage() {
                 value={form.bankBranch}
                 onChange={(e) => handleChange('bankBranch', e.target.value)}
                 placeholder="Andheri East, Mumbai"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               />
             </div>
           </div>
@@ -396,7 +396,7 @@ export default function SettingsPage() {
                     value={form.emailFromAddress}
                     onChange={(e) => handleChange('emailFromAddress', e.target.value)}
                     placeholder="info@yourcompany.com"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
                 <div>
@@ -405,7 +405,7 @@ export default function SettingsPage() {
                     value={form.emailFromName}
                     onChange={(e) => handleChange('emailFromName', e.target.value)}
                     placeholder="Securizen"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                   />
                 </div>
               </div>
@@ -415,7 +415,7 @@ export default function SettingsPage() {
                   value={form.internalEmailCC}
                   onChange={(e) => handleChange('internalEmailCC', e.target.value)}
                   placeholder="manager@company.com, ceo@company.com"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                 />
                 <p className="text-xs text-gray-400 mt-1">Separate multiple emails with commas</p>
               </div>
