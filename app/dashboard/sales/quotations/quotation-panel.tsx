@@ -88,16 +88,16 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
         <EditQuotationModal quotation={q} onClose={() => setShowEdit(false)} />
       )}
       {showConvertAmc && q && (
-  <NewAmcModal
-    quotationId={q.id}
-    contactId={q.contact?.id}
-    totalAmount={q.lines?.reduce((sum: number, l: any) => sum + Number(l.lineTotal || 0), 0)}
-    onClose={() => {
-      setShowConvertAmc(false);
-      queryClient.invalidateQueries({ queryKey: ['amc'] });
-    }}
-  />
-)}
+        <NewAmcModal
+          quotationId={q.id}
+          contactId={q.contact?.id}
+          totalAmount={q.lines?.reduce((sum: number, l: any) => sum + Number(l.lineTotal || 0), 0)}
+          onClose={() => {
+            setShowConvertAmc(false);
+            queryClient.invalidateQueries({ queryKey: ['amc'] });
+          }}
+        />
+      )}
 
       <div className="fixed inset-0 z-40 flex">
         <div className="flex-1 bg-black/30" onClick={onClose} />
@@ -212,12 +212,18 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
             </div>
           ) : null}
 
-          <div className="px-6 py-4 border-t bg-gray-50 flex gap-3">
+          <div className="px-6 py-4 border-t bg-gray-50 flex gap-3 flex-wrap">
             <button
               onClick={() => setShowEdit(true)}
               className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               ✏️ Edit
+            </button>
+            <button
+              onClick={() => window.open(`/dashboard/sales/quotations/${q?.id}/print`, '_blank')}
+              className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              🖨️ Print
             </button>
             {q?.state === 'DRAFT' && (
               <button
