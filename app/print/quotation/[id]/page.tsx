@@ -121,13 +121,15 @@ export default function PrintQuotationPage() {
   return (
     <>
       <style>{`
-        @media print {
-          @page { size: A4; margin: 10mm; }
-          body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; }
-          .no-print { display: none !important; }
-          .a4-page { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
-        }
-      `}</style>
+  @media print {
+    @page { size: A4; margin: 8mm; }
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; background: white !important; }
+    .no-print { display: none !important; }
+    .a4-page { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; border-radius: 0 !important; }
+    a[href]:after { content: none !important; }
+    * { -webkit-print-color-adjust: exact !important; }
+  }
+`}</style>
 
       {/* Action bar - hidden in print */}
       <div className="no-print" style={s.actionBar}>
