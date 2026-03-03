@@ -327,15 +327,16 @@ export default function ProductsPage() {
             )}
 
             {productDetail.datasheetUrl && (
-              
-                href={productDetail.datasheetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
-              >
-                📄 View Datasheet
-              </a>
-            )}
+  
+    href={productDetail.datasheetUrl as string}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+  >
+    📄 View Datasheet
+  </a>
+)}
+
           </div>
 
           <div className="px-5 py-3 border-t flex gap-2">
