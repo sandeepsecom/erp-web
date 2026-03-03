@@ -57,7 +57,7 @@ function AddOptionModal({ label, onAdd, onClose }: { label: string; onAdd: (val:
 
 function HsnSacSearch({ isService, onSelect }: { isService: boolean; onSelect: (code: string) => void }) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Array<{code: string; description: string; rate: string}>>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
