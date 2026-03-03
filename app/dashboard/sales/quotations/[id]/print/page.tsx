@@ -32,7 +32,6 @@ export default function PrintQuotationPage() {
   useEffect(() => {
     async function load() {
       try {
-        // Ensure token is set from localStorage for new tab
         if (typeof window !== 'undefined') {
           const stored = localStorage.getItem('erp_auth');
           if (stored) {
@@ -41,7 +40,6 @@ export default function PrintQuotationPage() {
             if (token) setAccessToken(token);
           }
         }
-
         const [qRes, cRes] = await Promise.all([
           quotationsApi.get(id),
           api.get('/core/company'),
@@ -74,9 +72,22 @@ export default function PrintQuotationPage() {
   const quotationTitle = TYPE_LABELS[quotation.quotationType] || 'Quotation';
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      {/* Action bar - hidden when printing */}
-      <div className="print:hidden bg-white border-b px-6 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
+    <>
+      <style>{`
+        @media print {
+          @page { size: A4; margin: 15mm; }
+          body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .no-print { display: none !important; }
+          .page { box-shadow: none !important; margin: 0 !important; }
+          .thead-dark { background-color: #1e3a5f !important; color: white !important; }
+          .thead-dark th { color: white !important; }
+          .grand-total-row { background-color: #1e3a5f !important; color: white !important; }
+          .grand-total-row td { color: white !important; }
+        }
+      `}</style>
+
+      {/* Action bar */}
+      <div className="no-print bg-white border-b px-6 py-3 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
         <button
           onClick={() => window.print()}
           className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors"
@@ -93,100 +104,94 @@ export default function PrintQuotationPage() {
       </div>
 
       {/* A4 Page */}
-      <div className="max-w-4xl mx-auto my-8 print:my-0 bg-white shadow-lg print:shadow-none">
-        <div className="p-10 print:p-8">
+      <div className="page max-w-4xl mx-auto my-8 bg-white shadow-lg" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div style={{ padding: '40px' }}>
 
           {/* Header */}
-          <div className="flex justify-between items-start mb-8">
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '32px' }}>
             <div>
               {company?.logoUrl && (
-                <img src={company.logoUrl} alt="Logo" className="h-14 mb-3 object-contain" />
+                <img src={company.logoUrl} alt="Logo" style={{ height: '56px', marginBottom: '12px', objectFit: 'contain' }} />
               )}
-              <h1 className="text-2xl font-bold text-blue-900">{company?.name}</h1>
-              {company?.legalName && <p className="text-sm text-gray-500">{company.legalName}</p>}
-              {company?.addressLine1 && <p className="text-sm text-gray-600 mt-1">{company.addressLine1}</p>}
+              <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e3a5f' }}>{company?.name}</div>
+              {company?.legalName && <div style={{ fontSize: '12px', color: '#6b7280' }}>{company.legalName}</div>}
+              {company?.addressLine1 && <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>{company.addressLine1}</div>}
               {(company?.city || company?.state) && (
-                <p className="text-sm text-gray-600">
+                <div style={{ fontSize: '12px', color: '#4b5563' }}>
                   {[company.city, company.state, company.pincode].filter(Boolean).join(', ')}
-                </p>
+                </div>
               )}
-              {company?.phone && <p className="text-sm text-gray-600">📞 {company.phone}</p>}
-              {company?.email && <p className="text-sm text-gray-600">✉️ {company.email}</p>}
-              {company?.gstin && (
-                <p className="text-sm text-gray-600 mt-1">GSTIN: <span className="font-medium">{company.gstin}</span></p>
-              )}
+              {company?.phone && <div style={{ fontSize: '12px', color: '#4b5563' }}>📞 {company.phone}</div>}
+              {company?.email && <div style={{ fontSize: '12px', color: '#4b5563' }}>✉️ {company.email}</div>}
+              {company?.gstin && <div style={{ fontSize: '12px', color: '#4b5563', marginTop: '4px' }}>GSTIN: <strong>{company.gstin}</strong></div>}
             </div>
-            <div className="text-right">
-              <h2 className="text-xl font-bold text-gray-800 uppercase tracking-wide">{quotationTitle}</h2>
-              <p className="text-2xl font-bold text-blue-900 mt-1">{quotation.name}</p>
-              <div className="mt-3 text-sm text-gray-600 space-y-1">
-                <p>Date: <span className="font-medium text-gray-800">{formatDate(quotation.createdAt)}</span></p>
-                {quotation.validUntil && (
-                  <p>Valid Until: <span className="font-medium text-gray-800">{formatDate(quotation.validUntil)}</span></p>
-                )}
-                <p>Status: <span className={`font-medium ${quotation.state === 'CONFIRMED' ? 'text-green-700' : 'text-gray-800'}`}>{quotation.state}</span></p>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#374151', textTransform: 'uppercase', letterSpacing: '1px' }}>{quotationTitle}</div>
+              <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#1e3a5f', marginTop: '4px' }}>{quotation.name}</div>
+              <div style={{ marginTop: '12px', fontSize: '13px', color: '#4b5563' }}>
+                <div>Date: <strong style={{ color: '#111827' }}>{formatDate(quotation.createdAt)}</strong></div>
+                {quotation.validUntil && <div>Valid Until: <strong style={{ color: '#111827' }}>{formatDate(quotation.validUntil)}</strong></div>}
+                <div>Status: <strong style={{ color: quotation.state === 'CONFIRMED' ? '#15803d' : '#111827' }}>{quotation.state}</strong></div>
               </div>
             </div>
           </div>
 
-          <hr className="border-gray-200 mb-6" />
+          <hr style={{ borderColor: '#e5e7eb', marginBottom: '24px' }} />
 
           {/* Customer Details */}
-          <div className="mb-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Bill To</h3>
-            <div className="bg-gray-50 rounded-lg p-4">
-              <p className="text-base font-semibold text-gray-800">
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Bill To</div>
+            <div style={{ backgroundColor: '#f9fafb', borderRadius: '8px', padding: '16px' }}>
+              <div style={{ fontSize: '15px', fontWeight: '600', color: '#111827' }}>
                 {contact?.companyName || `${contact?.firstName} ${contact?.lastName || ''}`}
-              </p>
-              {contact?.companyName && (
-                <p className="text-sm text-gray-600">{contact.firstName} {contact.lastName}</p>
-              )}
-              {contact?.email && <p className="text-sm text-gray-600">✉️ {contact.email}</p>}
-              {contact?.phone && <p className="text-sm text-gray-600">📞 {contact.phone}</p>}
-              {contact?.gstin && <p className="text-sm text-gray-600">GSTIN: {contact.gstin}</p>}
+              </div>
+              {contact?.companyName && <div style={{ fontSize: '13px', color: '#4b5563' }}>{contact.firstName} {contact.lastName}</div>}
+              {contact?.email && <div style={{ fontSize: '13px', color: '#4b5563' }}>✉️ {contact.email}</div>}
+              {contact?.phone && <div style={{ fontSize: '13px', color: '#4b5563' }}>📞 {contact.phone}</div>}
+              {contact?.gstin && <div style={{ fontSize: '13px', color: '#4b5563' }}>GSTIN: {contact.gstin}</div>}
             </div>
           </div>
 
           {/* Line Items */}
-          <div className="mb-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Items & Services</h3>
-            <table className="w-full border-collapse">
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Items & Services</div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr className="bg-blue-900 text-white">
-                  <th className="text-left px-4 py-3 text-xs font-semibold rounded-tl-lg">#</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold">Description</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold">Qty</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold">Unit Price</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold">Disc%</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold">Tax%</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold rounded-tr-lg">Amount</th>
+                <tr className="thead-dark" style={{ backgroundColor: '#1e3a5f', color: 'white' }}>
+                  <th style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>#</th>
+                  <th style={{ textAlign: 'left', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Description</th>
+                  <th style={{ textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Qty</th>
+                  <th style={{ textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Unit Price</th>
+                  <th style={{ textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Disc%</th>
+                  <th style={{ textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Tax%</th>
+                  <th style={{ textAlign: 'right', padding: '10px 12px', fontSize: '12px', fontWeight: '600', color: 'white' }}>Amount</th>
                 </tr>
               </thead>
               <tbody>
                 {lines.map((line: any, idx: number) => (
-                  <tr key={line.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-4 py-3 text-sm text-gray-500">{idx + 1}</td>
-                    <td className="px-4 py-3 text-sm text-gray-800">{line.description}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-600">{line.qty ?? line.quantity}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-600">{formatCurrency(line.unitPrice)}</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-600">{line.discountPct ?? 0}%</td>
-                    <td className="px-4 py-3 text-sm text-right text-gray-600">{line.taxPct ?? 0}%</td>
-                    <td className="px-4 py-3 text-sm text-right font-medium text-gray-800">{formatCurrency(line.lineTotal)}</td>
+                  <tr key={line.id} style={{ backgroundColor: idx % 2 === 0 ? 'white' : '#f9fafb' }}>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#6b7280', borderBottom: '1px solid #f3f4f6' }}>{idx + 1}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#111827', borderBottom: '1px solid #f3f4f6' }}>{line.description}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#4b5563', textAlign: 'right', borderBottom: '1px solid #f3f4f6' }}>{line.qty ?? line.quantity}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#4b5563', textAlign: 'right', borderBottom: '1px solid #f3f4f6' }}>{formatCurrency(line.unitPrice)}</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#4b5563', textAlign: 'right', borderBottom: '1px solid #f3f4f6' }}>{line.discountPct ?? 0}%</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', color: '#4b5563', textAlign: 'right', borderBottom: '1px solid #f3f4f6' }}>{line.taxPct ?? 0}%</td>
+                    <td style={{ padding: '10px 12px', fontSize: '13px', fontWeight: '500', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6' }}>{formatCurrency(line.lineTotal)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t border-gray-200">
-                  <td colSpan={6} className="px-4 py-2 text-right text-sm text-gray-600">Subtotal</td>
-                  <td className="px-4 py-2 text-right text-sm font-medium text-gray-800">{formatCurrency(quotation.subtotal)}</td>
+                <tr>
+                  <td colSpan={6} style={{ padding: '8px 12px', textAlign: 'right', fontSize: '13px', color: '#4b5563', borderTop: '1px solid #e5e7eb' }}>Subtotal</td>
+                  <td style={{ padding: '8px 12px', textAlign: 'right', fontSize: '13px', fontWeight: '500', color: '#111827', borderTop: '1px solid #e5e7eb' }}>{formatCurrency(quotation.subtotal)}</td>
                 </tr>
                 <tr>
-                  <td colSpan={6} className="px-4 py-2 text-right text-sm text-gray-600">GST</td>
-                  <td className="px-4 py-2 text-right text-sm font-medium text-gray-800">{formatCurrency(quotation.taxAmount)}</td>
+                  <td colSpan={6} style={{ padding: '8px 12px', textAlign: 'right', fontSize: '13px', color: '#4b5563' }}>GST</td>
+                  <td style={{ padding: '8px 12px', textAlign: 'right', fontSize: '13px', fontWeight: '500', color: '#111827' }}>{formatCurrency(quotation.taxAmount)}</td>
                 </tr>
-                <tr className="bg-blue-900 text-white">
-                  <td colSpan={6} className="px-4 py-3 text-right text-sm font-bold rounded-bl-lg">Grand Total</td>
-                  <td className="px-4 py-3 text-right text-sm font-bold rounded-br-lg">{formatCurrency(quotation.totalAmount)}</td>
+                <tr className="grand-total-row" style={{ backgroundColor: '#1e3a5f' }}>
+                  <td colSpan={6} style={{ padding: '12px', textAlign: 'right', fontSize: '14px', fontWeight: 'bold', color: 'white', borderRadius: '0 0 0 8px' }}>Grand Total</td>
+                  <td style={{ padding: '12px', textAlign: 'right', fontSize: '14px', fontWeight: 'bold', color: 'white', borderRadius: '0 0 8px 0' }}>{formatCurrency(quotation.totalAmount)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -194,62 +199,62 @@ export default function PrintQuotationPage() {
 
           {/* Notes / Terms */}
           {quotation.notes && (
-            <div className="mb-8">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Terms & Conditions</h3>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm text-gray-700 whitespace-pre-line">{quotation.notes}</p>
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Terms & Conditions</div>
+              <div style={{ backgroundColor: '#f9fafb', borderRadius: '8px', padding: '16px' }}>
+                <p style={{ fontSize: '13px', color: '#374151', whiteSpace: 'pre-line', margin: 0 }}>{quotation.notes}</p>
               </div>
             </div>
           )}
 
           {/* Bank Details */}
-          <div className="mb-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Bank Details</h3>
-            <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-2 gap-4">
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Bank Details</div>
+            <div style={{ backgroundColor: '#f9fafb', borderRadius: '8px', padding: '16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div>
-                <p className="text-xs text-gray-500">Bank Name</p>
-                <p className="text-sm font-medium text-gray-800">—</p>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>Bank Name</div>
+                <div style={{ fontSize: '13px', fontWeight: '500', color: '#111827' }}>—</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Account Number</p>
-                <p className="text-sm font-medium text-gray-800">—</p>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>Account Number</div>
+                <div style={{ fontSize: '13px', fontWeight: '500', color: '#111827' }}>—</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500">IFSC Code</p>
-                <p className="text-sm font-medium text-gray-800">—</p>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>IFSC Code</div>
+                <div style={{ fontSize: '13px', fontWeight: '500', color: '#111827' }}>—</div>
               </div>
               <div>
-                <p className="text-xs text-gray-500">Account Name</p>
-                <p className="text-sm font-medium text-gray-800">{company?.legalName || company?.name}</p>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>Account Name</div>
+                <div style={{ fontSize: '13px', fontWeight: '500', color: '#111827' }}>{company?.legalName || company?.name}</div>
               </div>
             </div>
           </div>
 
           {/* Signature */}
-          <div className="mt-12 grid grid-cols-2 gap-8">
+          <div style={{ marginTop: '48px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
             <div>
-              <div className="border-t-2 border-gray-300 pt-2">
-                <p className="text-xs text-gray-500">Customer Signature & Stamp</p>
-                <p className="text-sm text-gray-700 mt-1">
+              <div style={{ borderTop: '2px solid #d1d5db', paddingTop: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>Customer Signature & Stamp</div>
+                <div style={{ fontSize: '13px', color: '#374151', marginTop: '4px' }}>
                   {contact?.companyName || `${contact?.firstName} ${contact?.lastName || ''}`}
-                </p>
+                </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="border-t-2 border-gray-300 pt-2">
-                <p className="text-xs text-gray-500">For {company?.name}</p>
-                <p className="text-sm text-gray-700 mt-1">Authorised Signatory</p>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ borderTop: '2px solid #d1d5db', paddingTop: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#6b7280' }}>For {company?.name}</div>
+                <div style={{ fontSize: '13px', color: '#374151', marginTop: '4px' }}>Authorised Signatory</div>
               </div>
             </div>
           </div>
 
           {/* Footer */}
-          <div className="mt-10 text-center text-xs text-gray-400 border-t pt-4">
-            <p>This is a computer-generated quotation. Thank you for your business.</p>
+          <div style={{ marginTop: '40px', textAlign: 'center', fontSize: '11px', color: '#9ca3af', borderTop: '1px solid #e5e7eb', paddingTop: '16px' }}>
+            This is a computer-generated quotation. Thank you for your business.
           </div>
 
         </div>
       </div>
-    </div>
+    </>
   );
 }
