@@ -91,7 +91,7 @@ export default function QuotationPanel({ quotationId, onClose }: Props) {
   <NewAmcModal
     quotationId={q.id}
     contactId={q.contact?.id}
-    totalAmount={Number(q.totalAmount)}
+    totalAmount={q.lines?.reduce((sum: number, l: any) => sum + Number(l.lineTotal || 0), 0)}
     onClose={() => {
       setShowConvertAmc(false);
       queryClient.invalidateQueries({ queryKey: ['amc'] });
