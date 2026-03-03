@@ -223,32 +223,30 @@ export default function PrintQuotationPage() {
               </div>
             )}
 
-            {/* Bank Details - compact single row */}
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '10px', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Bank Details</div>
-              <div style={{ backgroundColor: '#f9fafb', borderRadius: '6px', padding: '10px 14px', border: '1px solid #e5e7eb', display: 'flex', gap: '32px', flexWrap: 'wrap' as const }}>
-                <div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px' }}>Bank Name</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>{company?.bankName || '—'}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px' }}>Account Number</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>{company?.bankAccountNumber || '—'}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px' }}>IFSC Code</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>{company?.bankIfsc || '—'}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px' }}>Branch</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>{company?.bankBranch || '—'}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '2px' }}>Account Name</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: '#111827' }}>{company?.bankAccountName || company?.legalName || company?.name}</div>
-                </div>
-              </div>
-            </div>
+            {/* Bank Details - inline */}
+<div style={{ marginBottom: '16px' }}>
+  <div style={{ fontSize: '10px', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Bank Details</div>
+  <div style={{ backgroundColor: '#f9fafb', borderRadius: '6px', padding: '8px 14px', border: '1px solid #e5e7eb' }}>
+    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <tbody>
+        <tr>
+          <td style={{ padding: '3px 8px 3px 0', fontSize: '11px', color: '#6b7280', whiteSpace: 'nowrap' as const, width: '1%' }}>Bank Name:</td>
+          <td style={{ padding: '3px 16px 3px 4px', fontSize: '11px', fontWeight: '600', color: '#111827' }}>{company?.bankName || '—'}</td>
+          <td style={{ padding: '3px 8px 3px 0', fontSize: '11px', color: '#6b7280', whiteSpace: 'nowrap' as const, width: '1%' }}>Account No:</td>
+          <td style={{ padding: '3px 16px 3px 4px', fontSize: '11px', fontWeight: '600', color: '#111827' }}>{company?.bankAccountNumber || '—'}</td>
+          <td style={{ padding: '3px 8px 3px 0', fontSize: '11px', color: '#6b7280', whiteSpace: 'nowrap' as const, width: '1%' }}>IFSC:</td>
+          <td style={{ padding: '3px 0 3px 4px', fontSize: '11px', fontWeight: '600', color: '#111827' }}>{company?.bankIfsc || '—'}</td>
+        </tr>
+        <tr>
+          <td style={{ padding: '3px 8px 3px 0', fontSize: '11px', color: '#6b7280', whiteSpace: 'nowrap' as const }}>Account Name:</td>
+          <td style={{ padding: '3px 16px 3px 4px', fontSize: '11px', fontWeight: '600', color: '#111827' }} colSpan={3}>{company?.bankAccountName || company?.legalName || company?.name}</td>
+          <td style={{ padding: '3px 8px 3px 0', fontSize: '11px', color: '#6b7280', whiteSpace: 'nowrap' as const }}>Branch:</td>
+          <td style={{ padding: '3px 0 3px 4px', fontSize: '11px', fontWeight: '600', color: '#111827' }}>{company?.bankBranch || '—'}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
             {/* Signature */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginTop: '32px' }}>
