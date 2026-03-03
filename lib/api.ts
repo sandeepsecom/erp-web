@@ -94,3 +94,7 @@ export const amcApi = {
   renew: (id: string, data: any) => api.patch(`/amc/${id}/renew`, data),
   cancel: (id: string) => api.patch(`/amc/${id}/cancel`),
 };
+
+export const authApi = {
+  switchCompany: (companySlug: string) => api.post('/auth/switch-company', { companySlug }),
+};
