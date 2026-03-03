@@ -326,9 +326,9 @@ export default function ProductsPage() {
               </div>
             )}
 
-            {productDetail.datasheetUrl && (
+{productDetail.datasheetUrl && (
   
-    href={productDetail.datasheetUrl as string}
+    href={String(productDetail.datasheetUrl)}
     target="_blank"
     rel="noopener noreferrer"
     className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
