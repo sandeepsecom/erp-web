@@ -182,7 +182,10 @@ export default function ProductsPage() {
       <div className="flex-1 p-6 overflow-auto">
         <div className="flex items-center justify-between mb-6">
           <div><h1 className="text-2xl font-bold text-gray-900">Products &amp; Services</h1><p className="text-sm text-gray-500 mt-1">{products.length} items</p></div>
-          <button onClick={() => { setEditProduct(null); setForm(defaultForm); setShowModal(true); setShowHsnSearch(false); }} className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-colors">+ New Product</button>
+<div className="flex gap-2">
+  <button onClick={() => router.push('/dashboard/products/import')} className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">Import CSV</button>
+  <button onClick={() => { setEditProduct(null); setForm(defaultForm); setShowModal(true); setShowHsnSearch(false); }} className="px-4 py-2 bg-blue-900 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-colors">+ New Product</button>
+</div>
         </div>
         <div className="flex gap-3 mb-5">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products..." className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
