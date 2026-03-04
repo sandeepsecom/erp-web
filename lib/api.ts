@@ -102,3 +102,21 @@ export const amcApi = {
   renew: (id: string, data: any) => api.patch(`/amc/${id}/renew`, data),
   cancel: (id: string) => api.patch(`/amc/${id}/cancel`),
 };
+
+export const vendorsApi = {
+  list: (params?: any) => api.get('/vendors', { params }),
+  get: (id: string) => api.get(`/vendors/${id}`),
+  create: (data: any) => api.post('/vendors', data),
+  update: (id: string, data: any) => api.put(`/vendors/${id}`, data),
+  delete: (id: string) => api.delete(`/vendors/${id}`),
+};
+
+export const purchaseOrdersApi = {
+  list: (params?: any) => api.get('/purchase-orders', { params }),
+  get: (id: string) => api.get(`/purchase-orders/${id}`),
+  create: (data: any) => api.post('/purchase-orders', data),
+  update: (id: string, data: any) => api.put(`/purchase-orders/${id}`, data),
+  updateStatus: (id: string, status: string) => api.patch(`/purchase-orders/${id}/status`, { status }),
+  delete: (id: string) => api.delete(`/purchase-orders/${id}`),
+  priceHistory: (productId: string) => api.get(`/purchase-orders/product/${productId}/price-history`),
+};
