@@ -102,9 +102,10 @@ export default function EditQuotationModal({ quotation, onClose }: Props) {
       if (field === 'productId' && value) {
         const product = products.find((p: any) => p.id === value);
         if (product) {
-          updated[index].description = product.name;
-          updated[index].unitPrice = Number(product.salePrice);
-        }
+  updated[index].description = product.name;
+  updated[index].unitPrice = Number(product.salePrice);
+  updated[index].taxRate = Number(product.outputTaxRate || product.taxRate || 18);
+}
       }
       return updated;
     });
