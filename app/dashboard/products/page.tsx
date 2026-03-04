@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { productsApi } from '@/lib/api';
 
 const DEFAULT_CATEGORIES = ['CCTV', 'Fire', 'Alarm', 'Access Control', 'Networking', 'AMC', 'Installation', 'Other'];
@@ -119,6 +120,7 @@ function HsnSacSearch({ isService, onSelect }: { isService: boolean; onSelect: (
 
 export default function ProductsPage() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterType, setFilterType] = useState('');

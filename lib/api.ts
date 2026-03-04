@@ -90,6 +90,7 @@ export const productsApi = {
   delete: (id: string) => api.delete(`/products/${id}`),
   addSerials: (id: string, data: any) => api.post(`/products/${id}/serials`, data),
   updateSerial: (id: string, serialId: string, data: any) => api.patch(`/products/${id}/serials/${serialId}`, data),
+  import: (products: any[]) => api.post('/products/import', { products }),
 };
 
 export const amcApi = {
