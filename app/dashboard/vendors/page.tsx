@@ -41,14 +41,7 @@ export default function VendorsPage() {
     setShowModal(true);
   };
 
-  const F = ({ label, field, placeholder = '' }: any) => (
-    <div>
-      <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
-      <input value={form[field]} onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
-        placeholder={placeholder}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-    </div>
-  );
+
 
   return (
     <div className="flex h-full">
@@ -59,7 +52,7 @@ export default function VendorsPage() {
         </div>
         <div className="mb-4">
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search vendors..."
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
         </div>
         {isLoading ? <div className="text-center py-12 text-gray-500">Loading...</div> : vendors.length === 0 ? (
           <div className="text-center py-12 text-gray-500"><p className="text-4xl mb-3">🏭</p><p className="font-medium">No vendors yet</p></div>
@@ -139,26 +132,106 @@ export default function VendorsPage() {
             </div>
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2"><F label="Vendor Name *" field="name" placeholder="e.g. Hikvision Distributors Pvt Ltd" /></div>
-                <F label="Contact Person" field="contactPerson" placeholder="Sales Manager name" />
-                <F label="Phone" field="phone" placeholder="+91 98765 43210" />
-                <F label="Email" field="email" placeholder="vendor@example.com" />
-                <F label="WhatsApp" field="whatsapp" placeholder="+91 98765 43210" />
-                <F label="GSTIN" field="gstin" placeholder="22AAAAA0000A1Z5" />
-                <F label="PAN" field="pan" placeholder="AAAAA0000A" />
-                <div className="col-span-2"><F label="Address" field="addressLine1" placeholder="Street address" /></div>
-                <F label="City" field="city" placeholder="Mumbai" />
-                <F label="State" field="state" placeholder="Maharashtra" />
-                <F label="Pincode" field="pincode" placeholder="400001" />
+                <div className="col-span-2"><div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Vendor Name *</label>
+                  <input value={form['name']} onChange={(e) => setForm((f) => ({...f, 'name': e.target.value}))}
+                    placeholder="e.g. Hikvision Distributors Pvt Ltd"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> /></div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Contact Person</label>
+                  <input value={form['contactPerson']} onChange={(e) => setForm((f) => ({...f, 'contactPerson': e.target.value}))}
+                    placeholder="Sales Manager name"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Phone</label>
+                  <input value={form['phone']} onChange={(e) => setForm((f) => ({...f, 'phone': e.target.value}))}
+                    placeholder="+91 98765 43210"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
+                  <input value={form['email']} onChange={(e) => setForm((f) => ({...f, 'email': e.target.value}))}
+                    placeholder="vendor@example.com"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">WhatsApp</label>
+                  <input value={form['whatsapp']} onChange={(e) => setForm((f) => ({...f, 'whatsapp': e.target.value}))}
+                    placeholder="+91 98765 43210"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">GSTIN</label>
+                  <input value={form['gstin']} onChange={(e) => setForm((f) => ({...f, 'gstin': e.target.value}))}
+                    placeholder="22AAAAA0000A1Z5"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">PAN</label>
+                  <input value={form['pan']} onChange={(e) => setForm((f) => ({...f, 'pan': e.target.value}))}
+                    placeholder="AAAAA0000A"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div className="col-span-2"><div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Address</label>
+                  <input value={form['addressLine1']} onChange={(e) => setForm((f) => ({...f, 'addressLine1': e.target.value}))}
+                    placeholder="Street address"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> /></div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">City</label>
+                  <input value={form['city']} onChange={(e) => setForm((f) => ({...f, 'city': e.target.value}))}
+                    placeholder="Mumbai"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">State</label>
+                  <input value={form['state']} onChange={(e) => setForm((f) => ({...f, 'state': e.target.value}))}
+                    placeholder="Maharashtra"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Pincode</label>
+                  <input value={form['pincode']} onChange={(e) => setForm((f) => ({...f, 'pincode': e.target.value}))}
+                    placeholder="400001"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
               </div>
               <hr />
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bank Details</p>
               <div className="grid grid-cols-2 gap-4">
-                <F label="Bank Name" field="bankName" placeholder="HDFC Bank" />
-                <F label="Branch" field="bankBranch" placeholder="Andheri West" />
-                <F label="Account Name" field="bankAccountName" placeholder="Company / Person name" />
-                <F label="Account Number" field="bankAccountNumber" placeholder="12345678901234" />
-                <F label="IFSC Code" field="bankIfsc" placeholder="HDFC0001234" />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Bank Name</label>
+                  <input value={form['bankName']} onChange={(e) => setForm((f) => ({...f, 'bankName': e.target.value}))}
+                    placeholder="HDFC Bank"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Branch</label>
+                  <input value={form['bankBranch']} onChange={(e) => setForm((f) => ({...f, 'bankBranch': e.target.value}))}
+                    placeholder="Andheri West"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Account Name</label>
+                  <input value={form['bankAccountName']} onChange={(e) => setForm((f) => ({...f, 'bankAccountName': e.target.value}))}
+                    placeholder="Company / Person name"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Account Number</label>
+                  <input value={form['bankAccountNumber']} onChange={(e) => setForm((f) => ({...f, 'bankAccountNumber': e.target.value}))}
+                    placeholder="12345678901234"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">IFSC Code</label>
+                  <input value={form['bankIfsc']} onChange={(e) => setForm((f) => ({...f, 'bankIfsc': e.target.value}))}
+                    placeholder="HDFC0001234"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div> />
               </div>
               <hr />
               <div>
